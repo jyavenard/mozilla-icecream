@@ -2,7 +2,11 @@
 
 All the files/scripts below can be found in this repository
 
-## Getting icecream installed and running
+## Make sure you are running the latest version of icecream
+
+Ubuntu ships an old icecream version released in 2013: version 1.0.1. You will find the latest release (1.1) packages for ubuntu/debian in the packages directory.
+
+## Getting icecream installed and running on Mac
 
 ```bash
 $ sudo mkdir /usr/local/sbin
