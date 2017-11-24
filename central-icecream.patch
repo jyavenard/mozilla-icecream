@@ -1,0 +1,31 @@
+diff --git a/media/ffvpx/ffvpxcommon.mozbuild b/media/ffvpx/ffvpxcommon.mozbuild
+index fdca987f49ef..4577d1440b9d 100644
+--- a/media/ffvpx/ffvpxcommon.mozbuild
++++ b/media/ffvpx/ffvpxcommon.mozbuild
+@@ -66,6 +66,7 @@ if CONFIG['GNU_CC']:
+             '-Wno-incompatible-pointer-types-discards-qualifiers',
+             '-Wno-string-conversion',
+             '-Wno-visibility',
++            '-ffreestanding',
+         ]
+     else:
+         CFLAGS += [
+diff --git a/old-configure.in b/old-configure.in
+index 849146516063..f99ceb3a16cd 100644
+--- a/old-configure.in
++++ b/old-configure.in
+@@ -4790,10 +4790,10 @@ AC_SUBST(MOZ_SYSTEM_NSPR)
+ 
+ AC_SUBST(MOZ_SYSTEM_NSS)
+ 
+-HOST_CMFLAGS=-fobjc-exceptions
+-HOST_CMMFLAGS=-fobjc-exceptions
+-OS_COMPILE_CMFLAGS=-fobjc-exceptions
+-OS_COMPILE_CMMFLAGS=-fobjc-exceptions
++HOST_CMFLAGS="-x objective-c -fobjc-exceptions"
++HOST_CMMFLAGS="-x objective-c++ -fobjc-exceptions"
++OS_COMPILE_CMFLAGS="-x objective-c -fobjc-exceptions"
++OS_COMPILE_CMMFLAGS="-x objective-c++ -fobjc-exceptions"
+ if test "$MOZ_WIDGET_TOOLKIT" = uikit; then
+   OS_COMPILE_CMFLAGS="$OS_COMPILE_CMFLAGS -fobjc-abi-version=2 -fobjc-legacy-dispatch"
+   OS_COMPILE_CMMFLAGS="$OS_COMPILE_CMMFLAGS -fobjc-abi-version=2 -fobjc-legacy-dispatch"
