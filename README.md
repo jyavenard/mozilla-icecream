@@ -6,7 +6,7 @@ All the files/scripts below can be found in this repository
 
 ```bash
 $ sudo mkdir /usr/local/sbin
-$ sudo chown jyavenard:admin /usr/local/sbin
+$ sudo chown $USER:admin /usr/local/sbin
 $ brew install icecream
 ```
 
