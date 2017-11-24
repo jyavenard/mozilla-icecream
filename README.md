@@ -122,10 +122,6 @@ index 849146516063..f99ceb3a16cd 100644
    OS_COMPILE_CMFLAGS="$OS_COMPILE_CMFLAGS -fobjc-abi-version=2 -fobjc-legacy-dispatch"
    OS_COMPILE_CMMFLAGS="$OS_COMPILE_CMMFLAGS -fobjc-abi-version=2 -fobjc-legacy-dispatch"
 ```
- 
-
-As well as this one:
-https://bug1412240.bmoattachments.org/attachment.cgi?id=8924013
 
 ## Configure your mozbuild for using icecream
 
@@ -150,6 +146,8 @@ CXX="$HOME/clang/clang+llvm-5.0.0-x86_64-apple-darwin/bin/clang++ --target=x86_6
 
 ac_add_options --with-compiler-wrapper="/usr/local/bin/icecc"
 ```
+
+## Start the build
 
 For some reasons, when using icecream remote host, configure takes over 4.5 minutes to run. As such I run configure on the local host only first with:
 ```bash
