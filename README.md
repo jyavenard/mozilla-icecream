@@ -1,6 +1,8 @@
 # How to setup icecream to compile mozilla-central on mac
 
-All the files/scripts below can be found in this repository
+All the files/scripts below can be found in this repository.
+
+At time of writing, brew installs llvm/clang 5.0 (clang version 5.0.0 (tags/RELEASE_500/final))
 
 ## Make sure you are running the latest version of icecream
 
@@ -9,8 +11,6 @@ Ubuntu ships an old icecream version released in 2013: version 1.0.1. You will f
 ## Getting icecream installed and running on Mac
 
 ```bash
-$ sudo mkdir /usr/local/sbin
-$ sudo chown $USER:admin /usr/local/sbin
 $ brew install icecream
 ```
 
@@ -52,7 +52,19 @@ then run:
 $ sudo launchctl load /Library/LaunchDaemons/com.mozilla.iceccd.plist
 ```
 
+## Getting llvm-5.0 installed and running on Mac
+
+```bash
+$ brew install llvm
+```
+
 ## Getting toolchain packaged for icecream
+
+You can directly download the archives here and skip this section.
+https://github.com/jyavenard/mozilla-icecream/raw/master/clang-5.0.0-Darwin17_x86_64.tar.gz
+and:
+https://github.com/jyavenard/mozilla-icecream/raw/master/clang-5.0.0-x86_64.tar.gz
+
 
 Get the latest mac clang build at http://releases.llvm.org/download.html
 
@@ -131,6 +143,8 @@ index 849146516063..f99ceb3a16cd 100644
    OS_COMPILE_CMMFLAGS="$OS_COMPILE_CMMFLAGS -fobjc-abi-version=2 -fobjc-legacy-dispatch"
 ```
 
+As of central 2017-11-28 you no longer need to modify old-configure.in
+
 ## Configure your mozbuild for using icecream
 
 This is the .mozconfig that I use:
@@ -149,8 +163,8 @@ ac_add_options --disable-optimize
 
 #ac_add_options --with-ccache=/opt/local/bin/ccache
 
-CC="$HOME/clang/clang+llvm-5.0.0-x86_64-apple-darwin/bin/clang --target=x86_64-apple-darwin16.0.0 -mmacosx-version-min=10.11"
-CXX="$HOME/clang/clang+llvm-5.0.0-x86_64-apple-darwin/bin/clang++ --target=x86_64-apple-darwin16.0.0 -mmacosx-version-min=10.11"
+CC="/usr/local/opt/llvm/bin/clang --target=x86_64-apple-darwin16.0.0 -mmacosx-version-min=10.11"
+CXX="/usr/local/opt/llvm/bin/clang++ --target=x86_64-apple-darwin16.0.0 -mmacosx-version-min=10.11"
 
 ac_add_options --with-compiler-wrapper="/usr/local/bin/icecc"
 ```
