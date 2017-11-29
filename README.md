@@ -24,20 +24,24 @@ Replace HOSTNAME with the hostname the icecc scheduler is running on.
 Alternatively, to get the icecream iceccd daemon running at boot time
 copy the file
 ```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.mozilla.iceccd</string>
+    <string>Icecc Daemon</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/local/sbin/iceccd</string>
+        <string>/usr/local/Cellar/icecream/1.1/sbin/iceccd</string>
         <string>-s</string>
-        <string>HOSTNAME</string>
+        <string>HOSTNAME_SCHEDULER</string>
     </array>
     <key>KeepAlive</key>
     <true/>
     <key>UserName</key>
     <string>root</string>
 </dict>
+</plist>
 ```
 
 into /Library/LaunchDaemons/com.mozilla.iceccd.plist
