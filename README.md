@@ -106,45 +106,6 @@ $ /usr/lib/icecc/icecc-create-env --clang ~/clang/clang+llvm-5.0.0-linux-x86_64-
 
 import the generated tar.gz into your mac and rename it as clang-5.0.0-x86_64.tar.gz, place it into ~/clang
 
-## Prepare your central tree
-
-You need to apply the following patch for now:
-```
-diff --git a/media/ffvpx/ffvpxcommon.mozbuild b/media/ffvpx/ffvpxcommon.mozbuild
-index fdca987f49ef..4577d1440b9d 100644
---- a/media/ffvpx/ffvpxcommon.mozbuild
-+++ b/media/ffvpx/ffvpxcommon.mozbuild
-@@ -66,6 +66,7 @@ if CONFIG['GNU_CC']:
-             '-Wno-incompatible-pointer-types-discards-qualifiers',
-             '-Wno-string-conversion',
-             '-Wno-visibility',
-+            '-ffreestanding',
-         ]
-     else:
-         CFLAGS += [
-diff --git a/old-configure.in b/old-configure.in
-index 849146516063..f99ceb3a16cd 100644
---- a/old-configure.in
-+++ b/old-configure.in
-@@ -4790,10 +4790,10 @@ AC_SUBST(MOZ_SYSTEM_NSPR)
- 
- AC_SUBST(MOZ_SYSTEM_NSS)
- 
--HOST_CMFLAGS=-fobjc-exceptions
--HOST_CMMFLAGS=-fobjc-exceptions
--OS_COMPILE_CMFLAGS=-fobjc-exceptions
--OS_COMPILE_CMMFLAGS=-fobjc-exceptions
-+HOST_CMFLAGS="-x objective-c -fobjc-exceptions"
-+HOST_CMMFLAGS="-x objective-c++ -fobjc-exceptions"
-+OS_COMPILE_CMFLAGS="-x objective-c -fobjc-exceptions"
-+OS_COMPILE_CMMFLAGS="-x objective-c++ -fobjc-exceptions"
- if test "$MOZ_WIDGET_TOOLKIT" = uikit; then
-   OS_COMPILE_CMFLAGS="$OS_COMPILE_CMFLAGS -fobjc-abi-version=2 -fobjc-legacy-dispatch"
-   OS_COMPILE_CMMFLAGS="$OS_COMPILE_CMMFLAGS -fobjc-abi-version=2 -fobjc-legacy-dispatch"
-```
-
-As of central 2017-11-28 you no longer need to modify old-configure.in
-
 ## Configure your mozbuild for using icecream
 
 This is the .mozconfig that I use:
@@ -171,12 +132,6 @@ ac_add_options --with-compiler-wrapper="/usr/local/bin/icecc"
 
 ## Start the build
 
-For some reasons, when using icecream remote host, configure takes over 4.5 minutes to run. As such I run configure on the local host only first with:
-```bash
-ICECC_VERSION="Darwin17_x86_64:$HOME/clang/clang-5.0.0-Darwin17_x86_64.tar.gz" ./mach configure
-```
-
-then we can continue the build:
 ```bash
 ICECC_VERSION="x86_64:$HOME/clang/clang-5.0.0-x86_64.tar.gz,Darwin17_x86_64:$HOME/clang/clang-5.0.0-Darwin17_x86_64.tar.gz" ./mach build -j32
 ```
