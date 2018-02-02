@@ -156,8 +156,6 @@ Those are the .mozconfig that I use:
 ### On Mac
 
 ```
-mk_add_options AUTOCLOBBER=1
-
 # -j4 allows 4 tasks to run in parallel. Set the number to be the amount of
 # cores in your machine. In Paris or Toronto use -j100
 mk_add_options MOZ_MAKE_FLAGS="-s -j16"
@@ -192,8 +190,6 @@ CXX="/usr/local/Cellar/icecream/1.1/libexec/icecc/bin/clang++ --target=x86_64-ap
 ### On Linux
 
 ```
-mk_add_options AUTOCLOBBER=1
-
 # -j4 allows 4 tasks to run in parallel. Set the number to be the amount of
 # cores in your machine. In Paris or Toronto use -j100
 mk_add_options MOZ_MAKE_FLAGS="-s -j16"
