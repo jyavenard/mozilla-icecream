@@ -1,4 +1,4 @@
-# How to setup icecream to compile mozilla-central on mac
+# How to setup icecream to compile mozilla-central on mac and linux
 
 All the files/scripts below can be found in this repository.
 
@@ -106,9 +106,10 @@ $ /usr/lib/icecc/icecc-create-env --clang ~/clang/clang+llvm-5.0.0-linux-x86_64-
 
 import the generated tar.gz into your mac and rename it as clang-5.0.0-x86_64.tar.gz, place it into ~/clang
 
-## Prepare your central tree
+## Prepare your central tree (for central 58 and earlier)
 
-You need to apply the following patch for now:
+If you want to compile central version 58 and earlier, you need to need to apply the following patches:
+
 ```
 diff --git a/media/ffvpx/ffvpxcommon.mozbuild b/media/ffvpx/ffvpxcommon.mozbuild
 index fdca987f49ef..4577d1440b9d 100644
@@ -147,39 +148,84 @@ As of central 2017-11-28 you no longer need to modify old-configure.in
 
 ## Configure your mozbuild for using icecream
 
-This is the .mozconfig that I use:
+There are two ways to configure the required ICECC_VERSION / ICECC_CC / ICECC_CXX, set the value in your $HOME/.profile or directly within the .mozconfig. I chose the later.
+The primary reason for this is related to my use of Visual Studio Code. There's a bug in VSCode C++ module that prevent symbols search to properly work (see https://github.com/Microsoft/vscode-cpptools/issues/1251)
+
+Those are the .mozconfig that I use:
+
+### On Mac
 
 ```
 mk_add_options AUTOCLOBBER=1
 
-ac_add_options --enable-debug-symbols
+# -j4 allows 4 tasks to run in parallel. Set the number to be the amount of
+# cores in your machine. In Paris or Toronto use -j100
+mk_add_options MOZ_MAKE_FLAGS="-s -j16"
+mk_add_options AUTOCLOBBER=1
 
 # Enable debug builds
 ac_add_options --enable-debug
+ac_add_options --enable-debug-symbols
 
 # Turn off compiler optimization. This will make applications run slower,
 # will allow you to debug the applications under a debugger, like GDB.
 ac_add_options --disable-optimize
 
-#ac_add_options --with-ccache=/opt/local/bin/ccache
+#enable FFmpeg code
+ac_add_options --enable-ffmpeg
 
-CC="/usr/local/opt/llvm/bin/clang --target=x86_64-apple-darwin16.0.0 -mmacosx-version-min=10.11"
-CXX="/usr/local/opt/llvm/bin/clang++ --target=x86_64-apple-darwin16.0.0 -mmacosx-version-min=10.11"
+#Malloc debug
+#ac_add_options --disable-jemalloc
 
-ac_add_options --with-compiler-wrapper="/usr/local/bin/icecc"
+#ac_add_options --with-ccache=/usr/local/bin/ccache
+#mk_add_options 'export RUSTC_WRAPPER=sccache'
+mk_add_options 'export CARGO_INCREMENTAL=1'
+
+mk_add_options "export ICECC_VERSION=x86_64:$HOME/clang/clang-5.0.0-x86_64.tar.gz,Darwin17_x86_64:$HOME/clang/clang-5.0.0-Darwin17_x86_64.tar.gz"
+mk_add_options "export ICECC_CC=/usr/local/opt/llvm/bin/clang"
+mk_add_options "export ICECC_CXX=/usr/local/opt/llvm/bin/clang++"
+
+CC="/usr/local/Cellar/icecream/1.1/libexec/icecc/bin/clang --target=x86_64-apple-darwin16.0.0 -mmacosx-version-min=10.11"
+CXX="/usr/local/Cellar/icecream/1.1/libexec/icecc/bin/clang++ --target=x86_64-apple-darwin16.0.0 -mmacosx-version-min=10.11"
+```
+
+### On Linux
+
+```
+mk_add_options AUTOCLOBBER=1
+
+# -j4 allows 4 tasks to run in parallel. Set the number to be the amount of
+# cores in your machine. In Paris or Toronto use -j100
+mk_add_options MOZ_MAKE_FLAGS="-s -j16"
+mk_add_options AUTOCLOBBER=1
+
+# Enable debug builds
+ac_add_options --enable-debug
+ac_add_options --enable-debug-symbols
+
+# Turn off compiler optimization. This will make applications run slower,
+# will allow you to debug the applications under a debugger, like GDB.
+ac_add_options --disable-optimize
+
+#enable FFmpeg code
+ac_add_options --enable-ffmpeg
+
+#Malloc debug
+#ac_add_options --disable-jemalloc
+
+#ac_add_options --with-ccache=/usr/local/bin/ccache
+#mk_add_options 'export RUSTC_WRAPPER=sccache'
+mk_add_options 'export CARGO_INCREMENTAL=1'
+
+mk_add_options "export ICECC_VERSION=x86_64:$HOME/clang/clang-5.0.0-x86_64.tar.gz"
+mk_add_options "export ICECC_CC=/usr/bin/clang-5.0"
+mk_add_options "export ICECC_CXX=/usr/bin/clang++-5.0"
+
+CC="/usr/lib/icecc/bin/clang --target=x86_64-pc-linux-gnu"
+CXX="/usr/lib/icecc/bin/clang++ --target=x86_64-pc-linux-gnu"
 ```
 
 ## Start the build
-
-For some reasons, when using icecream remote host, configure takes over 4.5 minutes to run. As such I run configure on the local host only first with:
-```bash
-ICECC_VERSION="Darwin17_x86_64:$HOME/clang/clang-5.0.0-Darwin17_x86_64.tar.gz" ./mach configure
-```
-
-then we can continue the build:
-```bash
-ICECC_VERSION="x86_64:$HOME/clang/clang-5.0.0-x86_64.tar.gz,Darwin17_x86_64:$HOME/clang/clang-5.0.0-Darwin17_x86_64.tar.gz" ./mach build -j32
-```
 
 You may find that only using the remote linux host makes your compilation much quicker, to do so, remove the Darwin17_x86_64 entry from ICECC_VERSION:
 ```bash
