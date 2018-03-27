@@ -2,7 +2,7 @@
 
 All the files/scripts below can be found in this repository.
 
-At time of writing, brew installs llvm/clang 5.0 (clang version 5.0.0 (tags/RELEASE_500/final))
+At time of writing, brew installs llvm/clang 6.0 (clang version 6.0.0 (tags/RELEASE_600/final))
 
 ## Make sure you are running the latest version of icecream
 
@@ -52,7 +52,7 @@ then run:
 $ sudo launchctl load /Library/LaunchDaemons/com.mozilla.iceccd.plist
 ```
 
-## Getting llvm-5.0 installed and running on Mac
+## Getting llvm-6.0 installed and running on Mac
 
 ```bash
 $ brew install llvm
@@ -60,17 +60,17 @@ $ brew install llvm
 
 ## Getting toolchain packaged for icecream
 
-You can directly download the archives here and skip this section.
-https://github.com/jyavenard/mozilla-icecream/raw/master/clang-5.0.0-Darwin17_x86_64.tar.gz
+You can directly download the archives here and skip the section below.
+https://github.com/jyavenard/mozilla-icecream/raw/master/clang-6.0.0-Darwin17_x86_64.tar.gz
 and:
-https://github.com/jyavenard/mozilla-icecream/raw/master/clang-5.0.0-x86_64.tar.gz
+https://github.com/jyavenard/mozilla-icecream/raw/master/clang-6.0.0-x86_64.tar.gz
 
 
 Get the latest mac clang build at http://releases.llvm.org/download.html
 
-Current it’s 5.0.0 available at:
-mac: http://releases.llvm.org/5.0.0/clang+llvm-5.0.0-x86_64-apple-darwin.tar.xz
-linux 64 bits: http://releases.llvm.org/5.0.0/clang+llvm-5.0.0-linux-x86_64-ubuntu16.04.tar.xz
+Current it’s 6.0.0 available at:
+mac: http://releases.llvm.org/6.0.0/clang+llvm-6.0.0-x86_64-apple-darwin.tar.xz
+linux 64 bits: http://releases.llvm.org/6.0.0/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
 (tested with ubuntu 16.04 and 17.10 only)
 
 In the following instructions, I placed everything into ~/clang for ease of documentation, you can of course place it in any location.
@@ -83,13 +83,13 @@ $ cd ~/clang
 
 Extract the archive and create the icecream toolchain archive
 ```bash
-$ wget http://releases.llvm.org/5.0.0/clang+llvm-5.0.0-x86_64-apple-darwin.tar.xz
-$ tar xvf clang+llvm-5.0.0-x86_64-apple-darwin.tar.xz
-$ /usr/local/Cellar/icecream/1.1/libexec/icecc/icecc-create-env --clang ~/clang/clang+llvm-5.0.0-x86_64-apple-darwin/bin/clang /usr/local/Cellar/icecream/1.1/libexec/icecc/compilerwrapper
+$ wget http://releases.llvm.org/6.0.0/clang+llvm-6.0.0-x86_64-apple-darwin.tar.xz
+$ tar xvf clang+llvm-6.0.0-x86_64-apple-darwin.tar.xz
+$ /usr/local/Cellar/icecream/1.1/libexec/icecc/icecc-create-env --clang ~/clang/clang+llvm-6.0.0-x86_64-apple-darwin/bin/clang /usr/local/Cellar/icecream/1.1/libexec/icecc/compilerwrapper
 ```
 
 this will create a file such ce3126a6676d8b9cd58ea709615bee97.tar.gz
-rename it into clang-5.0.0-Darwin17_x86_64.tar.gz
+rename it into clang-6.0.0-Darwin17_x86_64.tar.gz
 
 ### On Linux
 ```bash
@@ -99,12 +99,12 @@ $ cd ~/clang
 
 Extract the archive and create the icecream toolchain archive
 ```bash
-$ wget http://releases.llvm.org/5.0.0/clang+llvm-5.0.0-linux-x86_64-ubuntu16.04.tar.xz
-$ tar xvf ~/Download/clang+llvm-5.0.0-linux-x86_64-ubuntu16.04.tar.xz
-$ /usr/lib/icecc/icecc-create-env --clang ~/clang/clang+llvm-5.0.0-linux-x86_64-ubuntu16.04/bin/clang /usr/lib/icecc/compilerwrapper
+$ wget http://releases.llvm.org/6.0.0/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+$ tar xvf ~/Downloads/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+$ /usr/lib/icecc/icecc-create-env --clang ~/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-14.04/bin/clang /usr/lib/icecc/compilerwrapper
 ```
 
-import the generated tar.gz into your mac and rename it as clang-5.0.0-x86_64.tar.gz, place it into ~/clang
+import the generated tar.gz into your mac and rename it as clang-6.0.0-x86_64.tar.gz, place it into ~/clang
 
 ## Prepare your central tree (for central 58 and earlier)
 
@@ -158,7 +158,7 @@ Those are the .mozconfig that I use:
 ```
 # -j4 allows 4 tasks to run in parallel. Set the number to be the amount of
 # cores in your machine. In Paris or Toronto use -j100
-mk_add_options MOZ_MAKE_FLAGS="-s -j16"
+mk_add_options MOZ_MAKE_FLAGS="-s -j44"
 mk_add_options AUTOCLOBBER=1
 
 # Enable debug builds
@@ -179,7 +179,7 @@ ac_add_options --enable-ffmpeg
 #mk_add_options 'export RUSTC_WRAPPER=sccache'
 mk_add_options 'export CARGO_INCREMENTAL=1'
 
-mk_add_options "export ICECC_VERSION=x86_64:$HOME/clang/clang-5.0.0-x86_64.tar.gz,Darwin17_x86_64:$HOME/clang/clang-5.0.0-Darwin17_x86_64.tar.gz"
+mk_add_options "export ICECC_VERSION=x86_64:$HOME/clang/clang-6.0.0-x86_64.tar.gz,Darwin17_x86_64:$HOME/clang/clang-6.0.0-Darwin17_x86_64.tar.gz"
 mk_add_options "export ICECC_CC=/usr/local/opt/llvm/bin/clang"
 mk_add_options "export ICECC_CXX=/usr/local/opt/llvm/bin/clang++"
 
@@ -192,7 +192,7 @@ CXX="/usr/local/Cellar/icecream/1.1/libexec/icecc/bin/clang++ --target=x86_64-ap
 ```
 # -j4 allows 4 tasks to run in parallel. Set the number to be the amount of
 # cores in your machine. In Paris or Toronto use -j100
-mk_add_options MOZ_MAKE_FLAGS="-s -j16"
+mk_add_options MOZ_MAKE_FLAGS="-s -j44"
 mk_add_options AUTOCLOBBER=1
 
 # Enable debug builds
@@ -203,9 +203,6 @@ ac_add_options --enable-debug-symbols
 # will allow you to debug the applications under a debugger, like GDB.
 ac_add_options --disable-optimize
 
-#enable FFmpeg code
-ac_add_options --enable-ffmpeg
-
 #Malloc debug
 #ac_add_options --disable-jemalloc
 
@@ -213,9 +210,9 @@ ac_add_options --enable-ffmpeg
 #mk_add_options 'export RUSTC_WRAPPER=sccache'
 mk_add_options 'export CARGO_INCREMENTAL=1'
 
-mk_add_options "export ICECC_VERSION=x86_64:$HOME/clang/clang-5.0.0-x86_64.tar.gz"
-mk_add_options "export ICECC_CC=/usr/bin/clang-5.0"
-mk_add_options "export ICECC_CXX=/usr/bin/clang++-5.0"
+mk_add_options "export ICECC_VERSION=x86_64:$HOME/clang/clang-6.0.0-x86_64.tar.gz"
+mk_add_options "export ICECC_CC=/usr/bin/clang-6.0"
+mk_add_options "export ICECC_CXX=/usr/bin/clang++-6.0"
 
 CC="/usr/lib/icecc/bin/clang --target=x86_64-pc-linux-gnu"
 CXX="/usr/lib/icecc/bin/clang++ --target=x86_64-pc-linux-gnu"
@@ -225,7 +222,7 @@ CXX="/usr/lib/icecc/bin/clang++ --target=x86_64-pc-linux-gnu"
 
 You may find that only using the remote linux host makes your compilation much quicker, to do so, remove the Darwin17_x86_64 entry from ICECC_VERSION:
 ```bash
-ICECC_VERSION="x86_64:$HOME/clang/clang-5.0.0-x86_64.tar.gz" ./mach build -j32
+ICECC_VERSION="x86_64:$HOME/clang/clang-6.0.0-x86_64.tar.gz" ./mach build -j32
 ```
 
 A note of caution, the paths in ICECC_VERSION can't be symbolic links.
