@@ -6,7 +6,7 @@ At time of writing, brew installs llvm/clang 7.0 (clang version 7.0.0 (tags/RELE
 
 ## Make sure you are running the latest version of icecream
 
-Ubuntu prior 18.04 ships an old icecream version released in 2013: version 1.0.1. You will find the latest release (1.1) packages for ubuntu/debian in the packages directory.
+Ubuntu prior 18.04 shipped an old icecream version released in 2013: version 1.0.1. Upgrade to a Ubuntu 18.04 or you will find the latest release (1.1) packages for ubuntu/debian in the packages directory.
 
 ## Getting icecream installed and running on Mac
 
